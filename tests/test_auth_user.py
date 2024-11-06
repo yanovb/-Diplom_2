@@ -2,6 +2,7 @@ import allure
 from actions import Actions
 from routes import Routes
 from users_data import UsersData
+from errors import Errors
 
 
 class TestAuthUser:
@@ -17,4 +18,4 @@ class TestAuthUser:
     def test_auth_with_wrong_accesses(self):
         r = Actions.make_auth(Routes.LOGIN_ROUTE, UsersData.WRONG_ACCESSES)
 
-        assert r.status_code == 401 and r.json()['message'] == "email or password are incorrect"
+        assert r.status_code == 401 and r.json()['message'] == Errors.INCORRECT_EMAIL_OR_PASS

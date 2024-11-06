@@ -1,5 +1,7 @@
 import allure
 from actions import Actions
+from errors import Errors
+from ingredients_id import INGREDIENTS_ID
 from routes import Routes
 
 
@@ -32,17 +34,17 @@ class TestOrder:
         ingredients = []
         r = Actions.create_order(Routes.ORDERS_ROUTE, ingredients)
 
-        assert r.status_code == 400 and r.json()['message'] == "Ingredient ids must be provided"
+        assert r.status_code == 400 and r.json()['message'] == Errors.NO_INGREDIENT
 
     @allure.title('Создание заказа c неправильными id ингридиентов')
     @allure.description(
         'Проверка, что при создания заказа c неправильными id ингридиентов возвращается код 400 и сообщение об ошибке'
     )
     def test_create_order_with_wrong_ingredients_id(self):
-        ingredients = ["61c0c5a71d1f82001bdaaa61", "61c0c5a71d1f22001bdaaa71"]
+        ingredients = INGREDIENTS_ID
         r = Actions.create_order(Routes.ORDERS_ROUTE, ingredients)
 
-        assert r.status_code == 400 and r.json()['message'] == "One or more ids provided are incorrect"
+        assert r.status_code == 400 and r.json()['message'] == Errors.WRONG_INGREDIENTS
 
     @allure.title('Получение списка заказов авторизованного пользователя')
     @allure.description('Проверка, что раннее сделанный заказ есть в списке заказов')
@@ -60,4 +62,4 @@ class TestOrder:
     def test_get_orders_without_auth(self):
         r = Actions.get_orders(Routes.ORDERS_ROUTE)
 
-        assert r.status_code == 401 and r.json()['message'] == 'You should be authorised'
+        assert r.status_code == 401 and r.json()['message'] == Errors.NO_AUTH
